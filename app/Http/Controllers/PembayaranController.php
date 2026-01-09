@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class PembayaranController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::all();
+        return view('pembayaran.index', compact('pembayaran'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::all();
+        return view('pembayaran.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::create($request->all());
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil ditambahkan.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+        return view('pembayaran.show', compact('pembayaran'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+        return view('pembayaran.edit', compact('pembayaran'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+        $pembayaran->update($request->all());
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil diupdate.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+        $pembayaran->delete();
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
+    }
+}
