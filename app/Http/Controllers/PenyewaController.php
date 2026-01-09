@@ -2,79 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penyewa;
 use Illuminate\Http\Request;
 
 class PenyewaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $penyewa = \App\Models\Penyewa::all();
+        $penyewa = Penyewa::latest()->paginate(10);
         return view('penyewa.index', compact('penyewa'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
-        $penyewa = \App\Models\Penyewa::all();
-        return view('penyewa.index', compact('penyewa'));
+        return view('penyewa.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-        $penyewa = \App\Models\Penyewa::all();
-        return view('penyewa.index', compact('penyewa'));
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nik' => 'required|unique:penyewa|numeric',
+            'no_hp' => 'required|string',
+            'alamat_asal' => 'required|string',
+        ]);
+
+        Penyewa::create($validated);
+
+        return redirect()->route('penyewa.index')->with('success', 'Penyewa baru berhasil didaftarkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Penyewa $penyewa)
     {
-        //
-        $penyewa = \App\Models\Penyewa::findOrFail($id);
-        return view('penyewa.show', compact('penyewa'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-        $penyewa = \App\Models\Penyewa::findOrFail($id);
         return view('penyewa.edit', compact('penyewa'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Penyewa $penyewa)
     {
-        //
-        $penyewa = \App\Models\Penyewa::findOrFail($id);
-        $penyewa->update($request->all());
-        return redirect()->route('penyewa.index')->with('success', 'Penyewa berhasil diupdate.');
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nik' => 'required|numeric|unique:penyewa,nik,'.$penyewa->id,
+            'no_hp' => 'required|string',
+            'alamat_asal' => 'required|string',
+        ]);
+
+        $penyewa->update($validated);
+
+        return redirect()->route('penyewa.index')->with('success', 'Data penyewa diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Penyewa $penyewa)
     {
-        //
-        $penyewa = \App\Models\Penyewa::findOrFail($id);
         $penyewa->delete();
-        return redirect()->route('penyewa.index')->with('success', 'Penyewa berhasil dihapus.');
+        return redirect()->route('penyewa.index')->with('success', 'Data penyewa dihapus!');
     }
 }

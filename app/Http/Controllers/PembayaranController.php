@@ -2,79 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pembayaran;
+use App\Models\KontrakSewa;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $pembayaran = \App\Models\Pembayaran::all();
+        $pembayaran = Pembayaran::with(['kontrakSewa.penyewa', 'kontrakSewa.kamar'])->latest()->paginate(10);
         return view('pembayaran.index', compact('pembayaran'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
-        $pembayaran = \App\Models\Pembayaran::all();
-        return view('pembayaran.create');
+        $kontrak = KontrakSewa::where('status', 'aktif')->with('penyewa', 'kamar')->get();
+        return view('pembayaran.create', compact('kontrak'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-        $pembayaran = \App\Models\Pembayaran::create($request->all());
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil ditambahkan.');
-    }
+        $validated = $request->validate([
+            'kontrak_sewa_id' => 'required|exists:kontrak_sewa,id',
+            'bulan' => 'required|integer|min:1|max:12',
+            'tahun' => 'required|integer|min:2024',
+            'jumlah_bayar' => 'required|numeric',
+            'tanggal_bayar' => 'required|date',
+            'status' => 'required|in:lunas,tertunggak',
+            'keterangan' => 'nullable|string'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
-        return view('pembayaran.show', compact('pembayaran'));
-    }
+        Pembayaran::create($validated);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
-        return view('pembayaran.edit', compact('pembayaran'));
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dicatat!');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    
+    public function destroy(Pembayaran $pembayaran)
     {
-        //
-        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
-        $pembayaran->update($request->all());
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil diupdate.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
         $pembayaran->delete();
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
+        return redirect()->route('pembayaran.index')->with('success', 'Data pembayaran dihapus!');
     }
 }

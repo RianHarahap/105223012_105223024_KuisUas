@@ -22,21 +22,21 @@ class KamarSeeder extends Seeder
                 'nomor_kamar' => '101',
                 'harga' => 2000000,
                 'status' => 'Tersedia',
-                'tipe' => 'standard',
+                'tipe' => 'deluxe',
                 'fasilitas' => 'AC, Kamar Mandi Dalam'
             ],
             [
                 'nomor_kamar' => '102',
                 'harga' => 2500000,
                 'status' => 'Tersedia',
-                'tipe' => 'standard',
+                'tipe' => 'vip',
                 'fasilitas' => 'AC, Kamar Mandi Dalam, Balkon'
             ],
             [
                 'nomor_kamar' => '201',
                 'harga' => 3000000,
                 'status' => 'Tersedia',
-                'tipe' => 'standard',
+                'tipe' => 'deluxe',
                 'fasilitas' => 'AC, Kamar Mandi Dalam, Balkon, Dapur Kecil'
             ],
             [
@@ -57,14 +57,14 @@ class KamarSeeder extends Seeder
                 'nomor_kamar' => '302',
                 'harga' => 4500000,
                 'status' => 'Tersedia',
-                'tipe' => 'standard',
+                'tipe' => 'deluxe',
                 'fasilitas' => 'AC, Kamar Mandi Dalam, Balkon, Dapur Kecil, Ruang Tamu, Jacuzzi, Pemandangan Laut'
             ],
             [
                 'nomor_kamar' => '401',
                 'harga' => 5000000,
                 'status' => 'Tersedia',
-                'tipe' => 'standard',
+                'tipe' => 'deluxe',
                 'fasilitas' => 'AC, Kamar Mandi Dalam, Balkon, Dapur Kecil, Ruang Tamu, Jacuzzi, Pemandangan Laut, Layanan Pramutamu'
             ],
 
