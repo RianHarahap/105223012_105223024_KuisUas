@@ -22,15 +22,14 @@ class KamarController extends Controller
     {
         $validated = $request->validate([
             'nomor_kamar' => 'required|unique:kamar',
-            'tipe' => 'required|in:standard,deluxe,vip',
+            'tipe' => 'required',
             'harga' => 'required|numeric',
-            'fasilitas' => 'required|string',
-            'status' => 'required|in:tersedia,terisi',
+            'fasilitas' => 'required',
+            'status' => 'required',
         ]);
 
         Kamar::create($validated);
-
-        return redirect()->route('kamar.index')->with('success', 'Data Kamar berhasil ditambahkan!');
+        return redirect()->route('kamar.index')->with('success', 'Kamar berhasil ditambahkan!');
     }
 
     public function edit(Kamar $kamar)
@@ -42,20 +41,19 @@ class KamarController extends Controller
     {
         $validated = $request->validate([
             'nomor_kamar' => 'required|unique:kamar,nomor_kamar,'.$kamar->id,
-            'tipe' => 'required|in:standard,deluxe,vip',
+            'tipe' => 'required',
             'harga' => 'required|numeric',
-            'fasilitas' => 'required|string',
-            'status' => 'required|in:tersedia,terisi',
+            'fasilitas' => 'required',
+            'status' => 'required',
         ]);
 
         $kamar->update($validated);
-
-        return redirect()->route('kamar.index')->with('success', 'Data Kamar berhasil diperbarui!');
+        return redirect()->route('kamar.index')->with('success', 'Data Kamar diperbarui!');
     }
 
     public function destroy(Kamar $kamar)
     {
         $kamar->delete();
-        return redirect()->route('kamar.index')->with('success', 'Data Kamar berhasil dihapus!');
+        return redirect()->route('kamar.index')->with('success', 'Kamar berhasil dihapus!');
     }
 }

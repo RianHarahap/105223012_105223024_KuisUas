@@ -16,6 +16,7 @@ class PembayaranController extends Controller
 
     public function create()
     {
+        // Hanya tampilkan kontrak aktif
         $kontrak = KontrakSewa::where('status', 'aktif')->with('penyewa', 'kamar')->get();
         return view('pembayaran.create', compact('kontrak'));
     }
@@ -23,20 +24,19 @@ class PembayaranController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kontrak_sewa_id' => 'required|exists:kontrak_sewa,id',
+            'kontrak_sewa_id' => 'required',
             'bulan' => 'required|integer|min:1|max:12',
-            'tahun' => 'required|integer|min:2024',
+            'tahun' => 'required|integer',
             'jumlah_bayar' => 'required|numeric',
             'tanggal_bayar' => 'required|date',
-            'status' => 'required|in:lunas,tertunggak',
-            'keterangan' => 'nullable|string'
+            'status' => 'required',
+            'keterangan' => 'nullable'
         ]);
 
         Pembayaran::create($validated);
-
-        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dicatat!');
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran dicatat!');
     }
-    
+
     public function destroy(Pembayaran $pembayaran)
     {
         $pembayaran->delete();

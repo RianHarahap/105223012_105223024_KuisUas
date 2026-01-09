@@ -18,36 +18,36 @@ class KontrakSewaController extends Controller
     public function create()
     {
         $penyewa = Penyewa::all();
-        $kamar = Kamar::where('status', 'tersedia')->get(); // Hanya kamar tersedia
+        // Hanya ambil kamar yang tersedia
+        $kamar = Kamar::where('status', 'tersedia')->get();
         return view('kontrak-sewa.create', compact('penyewa', 'kamar'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'penyewa_id' => 'required|exists:penyewa,id',
-            'kamar_id' => 'required|exists:kamar,id',
+            'penyewa_id' => 'required',
+            'kamar_id' => 'required',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'harga_bulanan' => 'required|numeric',
         ]);
 
-        // Buat Kontrak
-        $kontrak = KontrakSewa::create($validated + ['status' => 'aktif']);
+        // 1. Buat Kontrak
+        KontrakSewa::create($validated + ['status' => 'aktif']);
 
-        // Update Status Kamar jadi 'terisi'
-        $kamar = Kamar::find($request->kamar_id);
-        $kamar->update(['status' => 'terisi']);
+        // 2. Ubah Status Kamar jadi Terisi
+        Kamar::where('id', $request->kamar_id)->update(['status' => 'terisi']);
 
         return redirect()->route('kontrak-sewa.index')->with('success', 'Kontrak berhasil dibuat!');
     }
 
     public function destroy(KontrakSewa $kontrakSewa)
     {
-        // Kembalikan status kamar jadi 'tersedia' saat kontrak dihapus
-        $kontrakSewa->kamar->update(['status' => 'tersedia']);
-        $kontrakSewa->delete();
+        // Kembalikan status kamar jadi tersedia
+        Kamar::where('id', $kontrakSewa->kamar_id)->update(['status' => 'tersedia']);
         
-        return redirect()->route('kontrak-sewa.index')->with('success', 'Kontrak dihapus & Kamar tersedia kembali!');
+        $kontrakSewa->delete();
+        return redirect()->route('kontrak-sewa.index')->with('success', 'Kontrak dihapus!');
     }
 }

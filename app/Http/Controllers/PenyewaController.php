@@ -21,15 +21,15 @@ class PenyewaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|unique:penyewa|numeric',
-            'no_hp' => 'required|string',
-            'alamat_asal' => 'required|string',
+            'nama_lengkap' => 'required',
+            'nomor_ktp' => 'required|unique:penyewa|numeric',
+            'nomor_telepon' => 'required',
+            'alamat_asal' => 'required',
+            'pekerjaan' => 'required',
         ]);
 
         Penyewa::create($validated);
-
-        return redirect()->route('penyewa.index')->with('success', 'Penyewa baru berhasil didaftarkan!');
+        return redirect()->route('penyewa.index')->with('success', 'Penyewa berhasil didaftarkan!');
     }
 
     public function edit(Penyewa $penyewa)
@@ -40,20 +40,20 @@ class PenyewaController extends Controller
     public function update(Request $request, Penyewa $penyewa)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|numeric|unique:penyewa,nik,'.$penyewa->id,
-            'no_hp' => 'required|string',
-            'alamat_asal' => 'required|string',
+            'nama_lengkap' => 'required',
+            'nomor_ktp' => 'required|numeric|unique:penyewa,nomor_ktp,'.$penyewa->id,
+            'nomor_telepon' => 'required',
+            'alamat_asal' => 'required',
+            'pekerjaan' => 'required',
         ]);
 
         $penyewa->update($validated);
-
-        return redirect()->route('penyewa.index')->with('success', 'Data penyewa diperbarui!');
+        return redirect()->route('penyewa.index')->with('success', 'Data Penyewa diperbarui!');
     }
 
     public function destroy(Penyewa $penyewa)
     {
         $penyewa->delete();
-        return redirect()->route('penyewa.index')->with('success', 'Data penyewa dihapus!');
+        return redirect()->route('penyewa.index')->with('success', 'Penyewa dihapus!');
     }
 }
