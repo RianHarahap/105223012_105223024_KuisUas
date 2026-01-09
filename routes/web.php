@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Route;
 // TODO: Route untuk Dashboard (halaman utama)
 Route::get('/', function () {
     return view('dashboard.index');
-});
+})->name('dashboard');
 
 
 // TODO: Resource routes untuk CRUD Kamar
-route::resource('kamar', \App\Http\Controllers\KamarController::class);
+Route::resource('kamar', \App\Http\Controllers\KamarController::class);
 
 // TODO: Resource routes untuk CRUD Penyewa
-route::resource('penyewa', \App\Http\Controllers\PenyewaController::class);
+Route::resource('penyewa', \App\Http\Controllers\PenyewaController::class);
 
 // TODO: Resource routes untuk CRUD Kontrak Sewa
-Route::resource('kontrak-sewa', KontrakSewaController::class);
+Route::resource('kontrak-sewa', \App\Http\Controllers\KontrakSewaController::class);
 
 // TODO: Resource routes untuk CRUD Pembayaran
-Route::resource('pembayaran', PembayaranController::class);
+Route::resource('pembayaran', \App\Http\Controllers\PembayaranController::class);
